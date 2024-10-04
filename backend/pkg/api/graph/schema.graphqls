@@ -1,0 +1,125 @@
+scalar Time
+
+# Define possible user roles
+enum UserRole {
+  OWNER
+  ADMIN
+  USER
+}
+
+# Define the User type with relevant fields
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  role: UserRole!
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type UserConnection {
+  nodes: [User!]!
+}
+
+# Define possible email statuses
+enum EmailStatus {
+  INBOX
+  DRAFT
+  SENT
+  SPAM
+  TRASH
+}
+
+# Define the Email type with relevant fields
+type Email {
+  id: ID!
+  sender: String!
+  recipients: [String!]!
+  subject: String!
+  body: String!
+  attachments: [Attachment]
+  sentAt: Time!
+  receivedAt: Time
+  isRead: Boolean!
+}
+
+type EmailConnection {
+  nodes: [Email!]!
+}
+
+# Define the Attachment type
+type Attachment {
+  id: ID!
+  url: String!
+  size: Int!
+  filename: String!
+}
+
+# Define the Query type for retrieving data
+type Query {
+  # Get user by ID
+  user(id: ID!): User!
+
+  # Get all users
+  users: UserConnection!
+
+  # Get email by ID
+  email(id: ID!): Email!
+
+  # Get all emails with optional filters
+  emails(filter: EmailFilterInput, search: String): EmailConnection!
+}
+
+# Define the Mutation type for modifying data
+type Mutation {
+  # Create a new user
+  createUser(input: CreateUserInput!): User!
+
+  # Update user details
+  updateUser(input: UpdateUserInput!): User!
+
+  # Delete a user
+  deleteUser(id: ID!): Boolean!
+
+  # Send a new email
+  sendEmail(input: SendEmailInput!): Email!
+
+  # Mark an email as read
+  markEmailAsRead(id: ID!): Email!
+
+  # Archive an email
+  archiveEmail(id: ID!): Boolean!
+}
+
+# Define the input type for creating a user
+input CreateUserInput {
+  email: String!
+  name: String!
+  role: UserRole!
+}
+
+# Define the input type for updating a user
+input UpdateUserInput {
+  id: ID!
+  email: String
+  name: String
+  role: UserRole
+}
+
+# Define the input type for sending an email
+input SendEmailInput {
+  sender: String!
+  recipients: [String!]!
+  subject: String!
+  body: String!
+  replyTo: ID!
+  attachments: [AttachmentInput]
+}
+
+# Define the input type for attachments
+input AttachmentInput {
+  id: ID!
+  filename: String!
+  url: String!
+  size: Int!
+}

@@ -1,0 +1,10 @@
+.idea
+
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+.env
+
+tmp
